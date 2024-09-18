@@ -1,6 +1,4 @@
-using System.Collections;
 using UnityEngine;
-
 
 [RequireComponent(typeof(Collider2D))]
 
@@ -26,17 +24,6 @@ public class Enemy : MonoBehaviour
         Move();
     }
 
-    private IEnumerator SmoothMove()
-    {
-        int minRandomValue = 2;
-        int maxRandomValue = 4;
-        int valueRandom = Random.Range(minRandomValue, maxRandomValue + 1);
-
-        _animator.SetInteger("States", 0);
-
-        yield return new WaitForSeconds(valueRandom);
-    }
-
     private void Move()
     {
         _animator.SetInteger("States", 1);
@@ -48,25 +35,15 @@ public class Enemy : MonoBehaviour
         startRotate.y = 0;
 
         if (transform.position == _waypoints[_currentWaypoint].position)
-        {
-            StartCoroutine(SmoothMove());
             _currentWaypoint = (_currentWaypoint + 1) % _waypoints.Length;
-        }
 
         Vector2 direction = _waypoints[_currentWaypoint].position;
 
         if (_currentWaypoint == _finishValueWaypoint)
-        {
-            direction.x = Mathf.Abs(direction.x);
             transform.rotation = (Quaternion.Euler(rotate));
-            transform.position = Vector2.MoveTowards(transform.position, direction, step);
-        }
         else
-        {
             transform.rotation = (Quaternion.Euler(startRotate));
-            transform.position = Vector2.MoveTowards(transform.position, direction, step);
-        }
 
-
+        transform.position = Vector2.MoveTowards(transform.position, direction, step);
     }
 }
